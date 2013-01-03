@@ -9,8 +9,9 @@ end_chapter = ARGV[1]
 PAGE = 'http://www.mangareader.net/bleach'
 
 (start_chapter.to_i .. end_chapter.to_i).each do |chapter|
+  store_dir = File.join(Dir.home, 'manga', 'bleach', chapter.to_s)
   begin
-    Dir.mkdir(File.join(Dir.home, 'manga', 'bleach', chapter.to_s))
+    Dir.mkdir store_dir
     puts "created dir #{chapter}"
   rescue Exception => e
     puts "no dir created for #{chapter}", e
@@ -23,7 +24,7 @@ PAGE = 'http://www.mangareader.net/bleach'
       p = agent.get([PAGE, chapter.to_s, page.to_s].join("/"))
       image = p.image_urls.first
 
-      File.open(File.join(Dir.pwd, chapter.to_s, "%02d.jpg" % page), 'wb') do |f|
+      File.open(File.join(store_dir, "%02d.jpg" % page), 'wb') do |f|
         f.write open(image).read
       end
       puts "stored #{chapter} #{page}"
